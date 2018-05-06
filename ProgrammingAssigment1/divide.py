@@ -1,27 +1,19 @@
 import sys
+import numpy as np
+import time
 ipt = sys.argv[1]
 file = open(ipt, 'r')
 arry = [int(x.strip()) for x in file.readlines()]
 
 
 def half_count(arry):
-    left = 0
     indice = 0
-    if length == 4:
-        for i in a[0:-1]:
-            for j in a[1:]:
-                print('i: ', i)
-                print('j: ', j)
-                if i > j:
-                    if (i <= length) & (j <= length):
-                        left = left + 1
-                print('left: ', left)
-                # elif i > j
-                #     if (i > length) & (j > length):
-                indice = indice + 1
-        print('total count: ', indice)
-
-    return left
+    if len(arry) == 1:
+        indice == 0
+    else:
+        if (arry[0] > arry[1]):
+            indice = indice + 1
+    return indice
 
 def count_inv(left, right):
     inv = 0
@@ -29,18 +21,21 @@ def count_inv(left, right):
         for j in right:
             if i > j:
                 inv = inv + 1
+            j = j + 1
+        i = i + 1
     return inv
 
 def count_total(arry):
-    length = len(arry)/2
-    print('length: ', length)
-    a = arry[0:int(length)]
-    print('the array first half is: ', a
-    if length <= 4:
-        total = half_count(a) + count_inv(a)
-    elif length > 4:
-        total = count_total(arry)
+    length = np.ceil(len(arry)/2)
+    left = arry[0:int(length)]
+    right = arry[int(length):]
+    if length <= 2:
+        total = half_count(left) + half_count(right) + count_inv(left, right)
+    else:
+        total = count_total(left) + count_total(right) + count_inv(left, right)
     return total
 
-print('the array is: ', arry)
-print('\nit has this number of inversions: ', left_count(arry))
+
+start_time = time.clock()
+print('\nit has this number of inversions: ', count_total(arry))
+print(time.clock() - start_time, 'seconds')
