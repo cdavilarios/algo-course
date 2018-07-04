@@ -5,53 +5,64 @@ from math import ceil
 from math import floor
 ipt = sys.argv[1]
 file = open(ipt, 'r')
-A = [int(x.strip()) for x in file.readlines()]
+arry = [int(x.strip()) for x in file.readlines()]
 
 
-def swaping(A, l, r, p):
+def middle(arry, start, length):
+    a = len(arry[start:length])
+    if a % 2 != 0:
+        m_value = int(a//2)
+    else:
+        m_value = int(a/2 - 1)
+    return m_value
+
+def swaping(arry, start, length, pivot):
     ## swaps the xth element with the 0th element
-    x = l
-    if p == 'final':
-        x = r - 1
-    elif p == 'median':
-        x = l + ceil((r - l)/2) - 1
-    A[x], A[l] = A[l], A[x]
-    return A
+    x = start
+    if pivot == 'final':
+        swap = length - 1
+    elif pivot == 'median':
+        m_value = middle(arry, start, length)
+        print('middle value is: ', m_value)
+        swap = arry.index(np.median([arry[start], arry[m_value], arry[length - 1]]))
+        print('swap median value is: ', swap)
+    arry[swap], arry[start] = arry[start], arry[swap]
+    return arry
 
-def partition(A, l, r, p):
+def partition(arry, start, length, pivot):
     count = 0
-    if (r - l) <= 1:
+    if (length - start) <= 1:
         count = 0
     else:
-        print(A)
-        A = swaping(A, l, r, p)
-        print(A)
-        i = l + 1
-        for j in range(l + 1, r):
-            if A[j] < A[l]:
-                A[i], A[j] = A[j], A[i]
-                print(A)
+        print(arry)
+        arry = swaping(arry, start, length, pivot)
+        print(arry)
+        i = start + 1
+        for j in range(start + 1, length):
+            if arry[j] < arry[start]:
+                arry[i], arry[j] = arry[j], arry[i]
+                print(arry)
                 i = i + 1
             j = j + 1
-        A[l], A[i - 1] = A[i - 1], A[l]
-        print(A)
-        count = r - l - 1 + partition(A, l, i - 1, p) + partition(A, i, r, p)
+        arry[start], arry[i - 1] = arry[i - 1], arry[start]
+        print(arry)
+        count = length - start - 1 + partition(arry, start, i - 1, pivot) + partition(arry, i, length, pivot)
     return count
 
 
-def comparisons(A, p):
-    r = len(A)
-    l = 0
-    count = partition(A, l, r, p)
+def comparisons(arry, pivot):
+    length = len(arry)
+    start = 0
+    count = partition(arry, start, length, pivot)
     return count
 
 
 start_time = time.clock()
-# print('initial array is: ', A)
-# print('\nwith pivot start has this number of comparisons: ', comparisons(A, 'start'))
-# print('\nwith pivot final has this number of comparisons: ', comparisons(A, 'final'))
-print('\nwith pivot median has this number of comparisons: ', comparisons(A, 'median'))
+# print('initial array is: ', arry)
+# print('\nwith pivot start has this number of comparisons: ', comparisons(arry, 'start'))
+# print('\nwith pivot final has this number of comparisons: ', comparisons(arry, 'final'))
+print('\nwith pivot median has this number of comparisons: ', comparisons(arry, 'median'))
 
-# print('array pushing final element: ', pushing(A, 1))
-# print('\ncomparisons with pivot 0th element: ', comparisons(A))
+# print('array pushing final element: ', pushing(arry, 1))
+# print('\ncomparisons with pivot 0th element: ', comparisons(arry))
 print(time.clock() - start_time, 'seconds')
